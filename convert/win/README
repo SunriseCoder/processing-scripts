@@ -1,0 +1,11 @@
+Convert system deployment
+
+1. Install ffmpeg
+2. Add ffmpeg home directory to %FFMPEG_HOME% variable
+3. Add %FFMPEG_HOME%\bin to %PATH% variable
+
+4. Install Java JDK 8+
+
+5. Add scripts home (folder "convert") to %CONVERT_HOME% variable
+6. Add %CONVERT_HOME%\win to %PATH% variable
+7. Add %CONVERT_HOME%\lin to %PATH% variable
