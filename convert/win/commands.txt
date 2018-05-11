@@ -1,0 +1,2 @@
+# Resize 640x360 to 640x480 with black bars
+ffmpeg -i test.mp4 -vf pad=640:480:0:60 test-out.mp4

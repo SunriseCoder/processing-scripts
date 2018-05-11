@@ -1,0 +1,1 @@
+ffmpeg -i %1 -vf showinfo -f null - > frames.log 2>&1
