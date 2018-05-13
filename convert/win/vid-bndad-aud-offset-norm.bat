@@ -7,7 +7,7 @@ set wave_name=%1_
 ffmpeg -ss 0:00.520 -i %1 -vn -ac 1 -ar 48000 %wave_name%.wav
 echo Unpacking of %wave_name% with offset is done
 
-java -cp D:\convert\scripts\portal-integrations-0.0.1-SNAPSHOT.jar app.integrations.App %wave_name%
+call norm.bat %wave_name%
 echo Normalization of %wave_name% is done
 
 ffmpeg ^
