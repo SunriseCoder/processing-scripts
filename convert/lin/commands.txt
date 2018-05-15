@@ -1,0 +1,5 @@
+# Make image dump for all videos in the folder
+foreach.sh vid-wav-dump.sh "*"
+
+# Make image dump for all videos in the folder via HTML-Page
+foreach.sh vid-wav-dump.sh "*" dump.html
