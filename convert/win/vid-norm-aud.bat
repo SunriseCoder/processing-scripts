@@ -26,4 +26,4 @@ echo deleting temporary files
 del %wave_name%
 del %wave_name%_out.wav
 
-echo Audio offset for %1 is done
+echo Normalization of audio track for %1 is done
