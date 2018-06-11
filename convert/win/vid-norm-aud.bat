@@ -12,7 +12,7 @@ echo Normalization of %wave_name% is done
 
 ffmpeg ^
 	-i %1 ^
-	-i %wave_name%_out.wav ^
+	-i %wave_name%_norm.wav ^
 	-map 0:0 ^
 	-map 1:0 ^
 	-c:v copy ^
@@ -24,6 +24,6 @@ echo Replacing audio for %1 is done
 echo deleting temporary files
 
 del %wave_name%
-del %wave_name%_out.wav
+del %wave_name%_norm.wav
 
 echo Normalization of audio track for %1 is done

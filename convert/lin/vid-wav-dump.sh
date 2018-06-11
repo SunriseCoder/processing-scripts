@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Use <image_file_name> as second parameter to append to an existing image
+# $1 - filename
+# $2 - html file name to add this image to it
 
 echo Creating audio dump for video "$1"
 
