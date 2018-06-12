@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # $1 - wave-filename
-# $2 - png-filename (optional)
+# $2 - png-filename (optional). Use "-" if you want to default behaviour, but need next parameter
 # $3 - options (comma-separated)
 #      m - add math meanings to the image (statistic)
 #      d - add deltas count to the image (statistic)
@@ -9,9 +9,9 @@
 
 echo Creating audio dump for "$1"
 
-args[0]="$1" # 1-st parameter as options
+args[0]="$1"
 
-if [ -z "$2" ] # 2-nd parameter as filename
+if [ -z "$2" ] || [ "$2" = "-" ] # 2-nd is empty or equals to "-"
 then
 	args[1]="$1.png"
 else
