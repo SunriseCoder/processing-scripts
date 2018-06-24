@@ -1,7 +1,6 @@
-
 ffmpeg ^
 	-loop 1 ^
-	-i d:\convert\scripts\AudioToVideoStub.jpg ^
+	-i %CONVERT_HOME%\res\pictures\AudioToVideoStub.jpg ^
 	-i %1 ^
 	-c:a copy ^
 	-c:v libx264 -tune stillimage -pix_fmt yuv420p ^
