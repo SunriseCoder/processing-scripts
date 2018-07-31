@@ -17,7 +17,6 @@ ffmpeg ^
 	-map 1:0 ^
 	-c:v copy ^
 	-c:a aac ^
-	-b:a 64k ^
 	%1_norm.mp4
 echo Replacing audio for %1 is done
 
