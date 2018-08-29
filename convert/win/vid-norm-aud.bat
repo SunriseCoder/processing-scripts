@@ -13,7 +13,7 @@ echo Normalization of %wave_name% is done
 ffmpeg ^
 	-i %1 ^
 	-i %wave_name%_norm.wav ^
-	-map 0:0 ^
+	-map 0:v ^
 	-map 1:0 ^
 	-c:v copy ^
 	-c:a aac ^
