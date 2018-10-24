@@ -2,6 +2,7 @@
 
 if [ $# -lt 2 ]; then
 	echo "Usage: foreach.sh <command> <mask> [command_args]"
+	echo "       where <mask> is like: \"*.mp4\""
 	exit
 fi
 
