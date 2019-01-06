@@ -9,3 +9,5 @@ Convert system deployment
 5. Add scripts home (folder "convert") to %CONVERT_HOME% variable
 6. Add %CONVERT_HOME%\win to %PATH% variable
 7. Add %CONVERT_HOME%\lin to %PATH% variable
+
+8. Install ImageMagic to process images

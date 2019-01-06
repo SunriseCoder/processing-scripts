@@ -1,7 +1,7 @@
-echo Resizing %1 to "%2"x%3 %4
+echo Resizing %1 to %2 and save as %3
 
 set filename=%1
-set w=%2
-set h=%3
-set ext=%4
-ffmpeg -i %filename% -vf "scale=%w%:%h%" resized-%w%x%h%-%filename%%ext%
+set resize=%2
+set ext=%3
+
+mogrify -resize %resize% -format %ext% %filename%
