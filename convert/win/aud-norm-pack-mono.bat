@@ -3,14 +3,14 @@ Rem 2. Normalizing Wav-file
 
 set wave_name=%~n1_src.wav
 set norm_wave_name=%~n1_src_norm.wav
-set mp3_name=%~n1.mp3
+set mp3_name=%~n1_norm.mp3
 
 Rem To Wav
 ffmpeg -i %1 -ac 1 "%wave_name%"
 echo Unpacking of %wave_name% is done
 
 Rem Normalization
-call norm.bat "%wave_name%"
+call norm-mono.bat "%wave_name%"
 echo Normalization of %wave_name% is done
 
 Rem Pack to mp3
