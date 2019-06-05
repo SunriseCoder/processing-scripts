@@ -73,7 +73,7 @@ echo ==== Embedding Logo
 		-i %1 -i "%norm_wave_name%" -i "%logo_name%" ^
 		-map 0:v -map 1:0 ^
 		-filter_complex "[0]yadif=mode=send_field:deint=interlaced[deint], [deint][2]overlay=0:0" ^
-		-c:v libx264 -crf 23 -video_track_timescale 90000 ^
+		-c:v libx264 -crf 23 -video_track_timescale 90000 -vsync vfr -r 25 ^
 		-c:a aac -ar 48000 ^
 		"%video_with_logo_name%"
 	if %errorlevel% neq 0 exit /b %errorlevel%

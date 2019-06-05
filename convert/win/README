@@ -10,4 +10,5 @@ Convert system deployment
 6. Add %CONVERT_HOME%\win to %PATH% variable
 7. Add %CONVERT_HOME%\lin to %PATH% variable
 
-8. Install ImageMagic to process images
+8. Install ImageMagick to process images
+9. Install GhostScript to convert PDFs
