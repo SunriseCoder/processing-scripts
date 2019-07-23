@@ -32,10 +32,10 @@
 		"2"
 	],
 	"videoFPS": [
-		"60"
+		"30"
 	],
 	"silence": {
-		"": "",
+		"": "-af \"volume=1.0\"",
 		"silent": "-af \"volume=0\""
 	}
 }
