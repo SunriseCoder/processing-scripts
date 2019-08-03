@@ -6,7 +6,7 @@ Rem variables
 set resource_path_escaped=%CONVERT_HOME:\=\\%\\res
 set tmp_file=tmp.txt
 set silent_suffix=
-if "%2"=="silent" set silent_suffix=-silent
+if "%2"=="silent" set silent_suffix=silent
 
 set wave_name=%~n1.wav
 set file_ext=%~x1
