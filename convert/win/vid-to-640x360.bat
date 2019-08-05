@@ -1,3 +1,5 @@
+set video_output_name=%~n1_scaled.mp4
+
 ffmpeg ^
 	-i %1 ^
 	-c:v libx264 ^
@@ -5,6 +7,6 @@ ffmpeg ^
 	-vf "scale=640:360" ^
 	-c:a aac ^
 	-q:a 64k ^
-	%1_scaled.mp4
+	"%video_output_name%"
 
 echo Scaling of %1 is done
