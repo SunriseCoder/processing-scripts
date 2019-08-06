@@ -88,6 +88,7 @@ echo ==== Embedding Logo
 		-c:a aac -ar %frame_rate% -ac %channel_number% ^
 		"%video_with_logo_name%"
 	if %errorlevel% neq 0 exit /b %errorlevel%
+
 Rem Intro and Outro
 echo ==== Wrapping Intro and Outro
 	Rem Preparing files_.txt
