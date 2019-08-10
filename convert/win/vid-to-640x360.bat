@@ -5,6 +5,9 @@ ffmpeg ^
 	-c:v libx264 ^
 	-crf 23 ^
 	-vf "scale=640:360" ^
+	-video_track_timescale 90000 ^
+	-vsync vfr ^
+	-r 25 ^
 	-c:a aac ^
 	-q:a 64k ^
 	"%video_output_name%"

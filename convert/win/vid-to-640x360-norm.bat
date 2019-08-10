@@ -15,6 +15,9 @@ ffmpeg ^
 	-map 1:a ^
 	-c:v libx264 ^
 	-crf 23 ^
+	-video_track_timescale 90000 ^
+	-vsync vfr ^
+	-r 25 ^
 	-vf "scale=640:360" ^
 	-c:a aac ^
 	-b:a 64k ^
