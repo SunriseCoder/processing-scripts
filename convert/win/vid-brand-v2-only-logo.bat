@@ -1,4 +1,4 @@
-Rem Usage: vid-brand-v1 <filename> [silent]
+Rem Usage: vid-brand-v1 <filename> [silent] [output_file]
 
 Rem You can set environment variable no_delete=1 to don't delete temporary files
 
@@ -12,10 +12,12 @@ set wave_name=%~n1.wav
 set file_ext=%~x1
 set norm_wave_name=%~n1_norm.wav
 
+set video_tmp_name=%~n1_tmp.mp4
 set video_with_logo_name=%~n1_logo.mp4
 
-set video_tmp_name=%~n1_tmp.mp4
-set video_ready_name=%~n1_ready.mp4
+if NOT "%~3"=="" (
+	set video_with_logo_name=%~n3%~x3
+)
 
 del %tmp_file%
 
@@ -42,21 +44,9 @@ Rem getting audio channel number
 
 del %tmp_file%
 
-Rem CA_Intro_1080x1920-60fps-44100Hz-1Ch-silent.mp4
-set intro_name=%resource_path_escaped%\\videos\\generated\\CA_Intro_%resolution%-30fps-%frame_rate%Hz-%channel_number%Ch-%silent_suffix%.mp4
-set outro_name=%resource_path_escaped%\\videos\\generated\\CA_Outro_%resolution%-30fps-%frame_rate%Hz-%channel_number%Ch-%silent_suffix%.mp4
 set logo_name=%CONVERT_HOME%\res\pictures\CA_Logo_for_%resolution%.png
 
-Rem Checking that Intro, Outro and Logo are exists, otherwise format is not supported
-	if not exist %intro_name% (
-		echo Format is not supported, because there is no file: %intro_name%
-		exit /b -1
-	)
-
-	if not exist %outro_name% (
-		echo Format is not supported, because there is no file: %outro_name%
-		exit /b -1
-	)
+Rem Checking that Logo exist, otherwise format is not supported
 
 	if not exist %logo_name% (
 		echo Format is not supported, because there is no file: %logo_name%
@@ -91,39 +81,20 @@ echo ==== Embedding Logo
 		-filter_complex "[0]yadif=mode=send_field:deint=interlaced[deint], [deint][2]overlay=0:0%scale_filter%" ^
 		-c:v libx264 -crf 23 -video_track_timescale 90000 -vsync vfr -r 25 ^
 		-c:a aac -ar %frame_rate% -ac %channel_number% ^
-		"%video_with_logo_name%"
+		"%video_tmp_name%"
 	if %errorlevel% neq 0 exit /b %errorlevel%
-
-Rem Intro and Outro
-echo ==== Wrapping Intro and Outro
-	Rem Preparing files_.txt
-	echo file '%intro_name%' > files_.txt
-	set file_name=%video_with_logo_name:"=%
-	echo file '%file_name%' >> files_.txt
-	echo file '%outro_name%' >> files_.txt
-
-	ffmpeg -f concat -safe 0 -i files_.txt -c copy "%video_tmp_name%"
-	if %errorlevel% neq 0 exit /b %errorlevel%
-echo ==== Intro and Outro are done
-
-echo ==== Renaming to Ready
-	move "%video_tmp_name%" "%video_ready_name%"
-
-echo ==== Packing to mp3
-	ffmpeg -i "%norm_wave_name%" -ar 22050 -ac 1 -q:a 9 "%~n1.mp3"
-	if %errorlevel% neq 0 exit /b %errorlevel%
-echo ==== Packing of mp3 is done
 
 echo ==== deleting temporary files
-
 	if NOT "%no_delete%"=="1" (
 		del files_.txt
 		del "%wave_name%"
 		del "%norm_wave_name%"
-		Rem del "%video_with_logo_name%"
 	)
 
 echo ==== deleting of temporary files is done
+
+echo === renaming to logo file ===
+	move "%video_tmp_name%" "%video_with_logo_name%"
 
 echo Processing of %1 is done
 echo ============================================================
