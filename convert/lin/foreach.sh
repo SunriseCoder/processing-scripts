@@ -24,4 +24,10 @@ for file in $2; do
 
 	echo Executing $command ${args[@]}
 	$command "${args[@]}"
+
+	# Exiting whole batch on error
+	if ! [ $? -eq 0 ]; then
+			echo exit $?
+	fi
+
 done

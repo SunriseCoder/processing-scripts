@@ -1,12 +1,16 @@
-Rem Usage: vid-brand-v1 <filename> [silent] [output_file]
+Rem Usage: vid-brand-v1 <filename> <resolution_x> <resolution_y> [silent] [output_file]
+Rem - resolution like 1920 1080, use 0 0 if You don't want to specify resolution
 
 Rem You can set environment variable no_delete=1 to don't delete temporary files
 
 Rem variables
 set resource_path_escaped=%CONVERT_HOME:\=\\%\\res
 set tmp_file=tmp.txt
+
+set desired_resolution=%2x%3
+
 set silent_suffix=
-if "%2"=="silent" set silent_suffix=silent
+if "%4"=="silent" set silent_suffix=silent
 
 set wave_name=%~n1.wav
 set file_ext=%~x1
@@ -15,8 +19,8 @@ set norm_wave_name=%~n1_norm.wav
 set video_tmp_name=%~n1_tmp.mp4
 set video_with_logo_name=%~n1_logo.mp4
 
-if NOT "%~3"=="" (
-	set video_with_logo_name=%~n3%~x3
+if not "%~5"=="" (
+	set video_with_logo_name=%~n5%~x5
 )
 
 del %tmp_file%
@@ -28,6 +32,12 @@ Rem getting source file resolution
 	ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 %1 > %tmp_file%
 	set /p h=<%tmp_file%
 	set resolution=%w%x%h%
+
+if not "%desired_resolution%" == "0x0" (
+	if not "%desired_resolution%" == "%resolution%" (
+		set scale_filter=, scale=%2:%3
+	)
+)
 
 if "%resolution%" == "3840x2160" (
 	set resolution=1920x1080

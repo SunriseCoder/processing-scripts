@@ -20,7 +20,15 @@ for file in *; do
 	# MTS file -> process as video file
 	elif [[ ${file,,} == *".mts" ]]; then
 		echo - - $file is a video file, processing
-		vid-brand-v2-only-logo.bat "$file" no-silent "$file.mp4"
+		vid-brand-v2-only-logo.bat "$file" 1920 1080 no-silent "$file.mp4"
+		if ! [ $? -eq 0 ]; then
+			echo exit $?
+		fi
+		cp "$file.mp4" concat-branded-videos
+	# MP4 file -> process as video file
+	elif [[ ${file,,} == *".mp4" ]]; then
+		echo - - $file is a video file, processing
+		vid-brand-v2-only-logo.bat "$file" 1920 1080 no-silent "$file.mp4"
 		if ! [ $? -eq 0 ]; then
 			echo exit $?
 		fi
