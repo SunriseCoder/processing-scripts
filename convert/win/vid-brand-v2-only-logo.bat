@@ -51,6 +51,9 @@ Rem getting audio sample rate
 Rem getting audio channel number
 	ffprobe -v error -select_streams a:0 -show_entries stream=channels -of csv=p=0 %1 > %tmp_file%
 	set /p channel_number=<%tmp_file%
+	if %channel_number% gtr 2 (
+		set channel_number=2
+	)
 
 del %tmp_file%
 
