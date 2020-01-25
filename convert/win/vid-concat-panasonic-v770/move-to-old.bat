@@ -1,5 +1,9 @@
 set folder=..\old-concat
 
+IF NOT EXIST %folder% (
+	mkdir %folder%
+)
+
 move *.mts %folder%
 move *.png %folder%
 

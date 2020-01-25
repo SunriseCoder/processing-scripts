@@ -1,4 +1,4 @@
-Rem Usage: vid-brand-v1 <filename> <resolution_x> <resolution_y> [silent] [output_file]
+Rem Usage: vid-brand-v2-only-logo <filename> <resolution_x> <resolution_y> [silent] [output_file]
 Rem - resolution like 1920 1080, use 0 0 if You don't want to specify resolution
 
 Rem You can set environment variable no_delete=1 to don't delete temporary files
