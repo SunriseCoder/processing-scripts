@@ -33,6 +33,14 @@ for file in *; do
 			echo exit $?
 		fi
 		cp "$file.mp4" concat-branded-videos
+	# MOV file -> process as video file
+	elif [[ ${file,,} == *".mov" ]]; then
+		echo - - $file is a video file, processing
+		vid-brand-v2-only-logo.bat "$file" 1920 1080 no-silent "$file.mp4"
+		if ! [ $? -eq 0 ]; then
+			echo exit $?
+		fi
+		cp "$file.mp4" concat-branded-videos
 	else
 		echo - - Could not find suitable processor for $file "($0)"
 		exit -1
