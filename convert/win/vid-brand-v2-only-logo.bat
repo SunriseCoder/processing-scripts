@@ -1,4 +1,4 @@
-Rem Usage: vid-brand-v2-only-logo <filename> <resolution_x> <resolution_y> [silent] [output_file]
+Rem Usage: vid-brand-v2-only-logo <filename> <resolution_x> <resolution_y> <audio_frame_rate> <audio_channels> [silent] [output_file]
 Rem - resolution like 1920 1080, use 0 0 if You don't want to specify resolution
 
 Rem You can set environment variable no_delete=1 to don't delete temporary files
@@ -9,8 +9,11 @@ set tmp_file=tmp.txt
 
 set desired_resolution=%2x%3
 
+set audio_frame_rate=%4
+set audio_channels=%5
+
 set silent_suffix=
-if "%4"=="silent" set silent_suffix=silent
+if "%6"=="silent" set silent_suffix=silent
 
 set wave_name=%~n1.wav
 set file_ext=%~x1
@@ -19,8 +22,8 @@ set norm_wave_name=%~n1_norm.wav
 set video_tmp_name=%~n1_tmp.mp4
 set video_with_logo_name=%~n1_logo.mp4
 
-if not "%~5"=="" (
-	set video_with_logo_name=%~n5%~x5
+if not "%~7"=="" (
+	set video_with_logo_name=%~n7%~x7
 )
 
 del %tmp_file%
@@ -45,14 +48,18 @@ if "%resolution%" == "3840x2160" (
 )
 
 Rem getting audio sample rate
-	ffprobe -v error -select_streams a:0 -show_entries stream=sample_rate -of csv=p=0 %1 > %tmp_file%
-	set /p frame_rate=<%tmp_file%
+	if "%audio_frame_rate%" == "0" (
+		ffprobe -v error -select_streams a:0 -show_entries stream=sample_rate -of csv=p=0 %1 > %tmp_file%
+		set /p audio_frame_rate=<%tmp_file%
+	)
 
 Rem getting audio channel number
-	ffprobe -v error -select_streams a:0 -show_entries stream=channels -of csv=p=0 %1 > %tmp_file%
-	set /p channel_number=<%tmp_file%
-	if %channel_number% gtr 2 (
-		set channel_number=2
+	if "%audio_channels%" == "0" (
+		ffprobe -v error -select_streams a:0 -show_entries stream=channels -of csv=p=0 %1 > %tmp_file%
+		set /p audio_channels=<%tmp_file%
+		if %audio_channels% gtr 2 (
+			set audio_channels=2
+		)
 	)
 
 del %tmp_file%
@@ -73,7 +80,7 @@ echo Processing of video %1 begin
 Rem Normalizing Audio
 echo ==== Normalizing audio
 	echo ==== ==== Unpacking %wave_name%
-		ffmpeg -i %1 -vn -ac %channel_number% "%wave_name%"
+		ffmpeg -i %1 -vn -ac %audio_channels% "%wave_name%"
 		if %errorlevel% neq 0 exit /b %errorlevel%
 	echo ==== ==== Unpacking of %wave_name% is done
 
@@ -93,7 +100,7 @@ echo ==== Embedding Logo
 		-map 0:v -map 1:a ^
 		-filter_complex "[0]yadif=mode=send_field:deint=interlaced[deint], [deint][2]overlay=0:0%scale_filter%" ^
 		-c:v libx264 -crf 23 -video_track_timescale 90000 -vsync vfr -r 25 ^
-		-c:a aac -ar %frame_rate% -ac %channel_number% ^
+		-c:a aac -ar %audio_frame_rate% -ac %audio_channels% ^
 		"%video_tmp_name%"
 	if %errorlevel% neq 0 exit /b %errorlevel%
 

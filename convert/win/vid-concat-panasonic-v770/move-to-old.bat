@@ -6,6 +6,7 @@ IF NOT EXIST %folder% (
 
 move *.mts %folder%
 move *.png %folder%
+move *.mov %folder%
 
 del *.mp4
 del *.wav
