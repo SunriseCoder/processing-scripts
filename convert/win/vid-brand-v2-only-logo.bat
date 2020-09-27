@@ -1,6 +1,5 @@
-Rem Usage: vid-brand-v2-only-logo <filename> <resolution_x> <resolution_y> <audio_framerate> <audio_channels_number> [silent] [output_file]
-Rem - resolution like 1920 1080, use 0 0 if You want to autodetect
-Rem - audio frame rate and audio channels number also use as 0 0 if You want autodetect
+Rem Usage: vid-brand-v2-only-logo <filename> <resolution_x> <resolution_y> <audio_frame_rate> <audio_channels> [silent] [output_file]
+Rem - resolution like 1920 1080, use 0 0 if You don't want to specify resolution
 
 Rem You can set environment variable no_delete=1 to don't delete temporary files
 
@@ -54,10 +53,6 @@ Rem getting audio sample rate
 		set /p audio_frame_rate=<%tmp_file%
 	)
 
-	if not "%~4"=="" and not "%~4"=="0" (
-		set frame_rate=%~4
-	)
-
 Rem getting audio channel number
 	if "%audio_channels%" == "0" (
 		ffprobe -v error -select_streams a:0 -show_entries stream=channels -of csv=p=0 %1 > %tmp_file%
@@ -65,9 +60,6 @@ Rem getting audio channel number
 		if %audio_channels% gtr 2 (
 			set audio_channels=2
 		)
-	)
-	if not "%~5"=="" and not "%~5"=="0" (
-		set channel_number=%~5
 	)
 
 del %tmp_file%
@@ -108,7 +100,7 @@ echo ==== Embedding Logo
 		-map 0:v -map 1:a ^
 		-filter_complex "[0]yadif=mode=send_field:deint=interlaced[deint], [deint][2]overlay=0:0%scale_filter%" ^
 		-c:v libx264 -crf 23 -video_track_timescale 90000 -vsync vfr -r 25 ^
-		-c:a aac -ar %audio_frame_rate% -ac %audio_channels% ^
+		-c:a aac -ar %audio_frame_rate% -ac %audio_channels% -vbr 3 ^
 		"%video_tmp_name%"
 	if %errorlevel% neq 0 exit /b %errorlevel%
 

@@ -6,6 +6,6 @@ ffmpeg ^
 	-map 0:v ^
 	-map 1:a ^
 	-c:v copy ^
-	-c:a aac ^
+	-c:a aac -vbr 3 ^
 	"%output_filename%"
 echo Audio track replacement for %1 is done

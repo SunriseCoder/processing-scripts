@@ -93,7 +93,7 @@ echo ==== Embedding Logo
 		-map 0:v -map 1:a ^
 		-filter_complex "[0]yadif=mode=send_field:deint=interlaced[deint], [deint][2]overlay=0:0%scale_filter%" ^
 		-c:v libx264 -crf 23 -video_track_timescale 90000 -vsync vfr -r 25 ^
-		-c:a aac -ar %frame_rate% -ac %channel_number% ^
+		-c:a aac -ar %frame_rate% -ac %channel_number% -vbr 3 ^
 		"%video_with_logo_name%"
 	if %errorlevel% neq 0 exit /b %errorlevel%
 
