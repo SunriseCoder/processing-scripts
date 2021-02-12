@@ -17,6 +17,8 @@ set video_with_logo_name=%~n1_logo.mp4
 set video_tmp_name=%~n1_tmp.mp4
 set video_ready_name=%~n1_ready.mp4
 
+set scale_filter=-1:-1
+
 del %tmp_file%
 
 Rem getting source file resolution
@@ -29,7 +31,7 @@ Rem getting source file resolution
 
 if "%resolution%" == "3840x2160" (
 	set resolution=1920x1080
-	set scale_filter=, scale=1920:1080
+	set scale_filter=1920:1080
 )
 
 Rem getting audio sample rate
@@ -91,7 +93,7 @@ echo ==== Embedding Logo
 	ffmpeg ^
 		-i %1 -i "%norm_wave_name%" -i "%logo_name%" ^
 		-map 0:v -map 1:a ^
-		-filter_complex "[0]yadif=mode=send_field:deint=interlaced[deint], [deint][2]overlay=0:0%scale_filter%" ^
+		-filter_complex "[0]yadif=mode=send_field:deint=interlaced[deint], [deint]scale=%scale_filter%[scaled], [scaled][2]overlay=0:0" ^
 		-c:v libx264 -crf 23 -video_track_timescale 90000 -vsync vfr -r 25 ^
 		-c:a aac -ar %frame_rate% -ac %channel_number% -vbr 3 ^
 		"%video_with_logo_name%"
