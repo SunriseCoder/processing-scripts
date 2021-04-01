@@ -1,13 +1,6 @@
-del *.mts.mp4
-del *.wav.mp4
+del *.mp4
 del *.png
+del *.mp3
+del *.mts
 
-del concat.mp4
 del index.html
-
-
-cd concat-branded-videos
-
-del 20*.mp4
-del concat.mp4
-del files.txt
