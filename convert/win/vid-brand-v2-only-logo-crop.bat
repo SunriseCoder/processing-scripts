@@ -43,10 +43,12 @@ Rem getting source file resolution
 Rem calculating scale and crop filters
 	set /A scale_factor_x=%desired_resolution_x%/%source_video_width%
 	set /A scale_factor_y=%desired_resolution_y%/%source_video_height%
+	set /A scaled_width=%source_video_width%*%desired_resolution_y%/%source_video_height%
+	set /A scaled_height=%source_video_height%*%desired_resolution_x%/%source_video_width%
 	if %scale_factor_x% gtr %scale_factor_y% (
-		set scale_filter=w=%desired_resolution_x%:h=ih*%desired_resolution_x%/%source_video_width%
+		set scale_filter=w=%desired_resolution_x%:h=%scaled_height%:flags=lanczos
 	) else (
-		set scale_filter=w=iw*%desired_resolution_y%/%source_video_height%:h=%desired_resolution_y%
+		set scale_filter=w=%scaled_width%:h=%desired_resolution_y%:flags=lanczos
 	)
 
 	set crop_filter=w=%desired_resolution_x%:h=%desired_resolution_y%:x=%crop_offset_x%:y=%crop_offset_y%
@@ -100,9 +102,9 @@ echo ==== Embedding Logo
 	Rem    to avoid problems with playback speed and video length glitches
 	Rem 3. aac -ar 48000 converts audio track to 48kHz to compatibility with Intro's and Outro's audio tracks
 	ffmpeg -y ^
-		-i %1 -i "%norm_wave_name%" -i "%logo_name%" ^
+		-i %1 -i "%norm_wave_name%" -loop 1 -i "%logo_name%" ^
 		-map 0:v -map 1:a ^
-		-filter_complex "[0]yadif=mode=send_field:deint=interlaced[deint], [deint]scale=%scale_filter%[scaled], [scaled]crop=%crop_filter%[cropped], [cropped][2]overlay=0:0" ^
+		-filter_complex "[0]yadif=mode=send_field:deint=interlaced[deint], [deint]scale=%scale_filter%[scaled], [scaled]crop=%crop_filter%[cropped], [cropped][2]overlay=0:0:shortest=1" ^
 		-c:v libx264 -crf 23 -video_track_timescale 90000 -vsync vfr -r 25 ^
 		-c:a aac -ar %audio_frame_rate% -ac %audio_channels% -vbr 3 ^
 		"%video_tmp_name%"
