@@ -7,7 +7,7 @@ if [ $# -lt 1 ]; then
 fi
 
 for file in $1; do
-	tb=`ffprobe -v error -select_streams v:0 -show_streams "$file"`
+	tb=`ffprobe -v error -show_streams "$file"`
 	echo "=== $file ==="
 	echo "$tb"
 done
