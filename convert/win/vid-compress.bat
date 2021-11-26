@@ -10,4 +10,4 @@ ffmpeg ^
 
 echo Compressing of %1 is done
 
-call vid-norm-aud.bat "%compressed_name%"
+Rem call vid-norm-aud.bat "%compressed_name%"
