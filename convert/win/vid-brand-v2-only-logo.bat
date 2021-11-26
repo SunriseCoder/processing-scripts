@@ -7,6 +7,8 @@ Rem variables
 set resource_path_escaped=%CONVERT_HOME:\=\\%\\res
 set tmp_file=tmp.txt
 
+set desired_width=%2
+set desired_height=%3
 set desired_resolution=%2x%3
 
 set audio_frame_rate=%4
@@ -32,20 +34,22 @@ del %tmp_file%
 
 Rem getting source file resolution
 	ffprobe -v error -select_streams v:0 -show_entries stream=width -of csv=p=0 %1 > %tmp_file%
-	set /p w=<%tmp_file%
+	set /p source_video_width=<%tmp_file%
 
 	ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 %1 > %tmp_file%
-	set /p h=<%tmp_file%
-	set resolution=%w%x%h%
+	set /p source_video_height=<%tmp_file%
+	set source_resolution=%source_video_width%x%source_video_height%
+
+set result_resolution=%desired_resolution%
 
 if not "%desired_resolution%" == "0x0" (
-	if not "%desired_resolution%" == "%resolution%" (
-		set scale_filter=%2:%3
+	if not "%desired_resolution%" == "%source_resolution%" (
+		set scale_filter=%desired_width%:%desired_height%
 	)
 )
 
-if "%resolution%" == "3840x2160" (
-	set resolution=1920x1080
+if "%source_resolution%" == "3840x2160" (
+	set result_resolution=1920x1080
 	set scale_filter=1920:1080
 )
 
@@ -66,7 +70,7 @@ Rem getting audio channel number
 
 del %tmp_file%
 
-set logo_name=%CONVERT_HOME%\res\pictures\CA_Logo_for_%resolution%.png
+set logo_name=%CONVERT_HOME%\res\pictures\CA_Logo_for_%result_resolution%.png
 
 Rem Checking that Logo exist, otherwise format is not supported
 
@@ -98,9 +102,9 @@ echo ==== Embedding Logo
 	Rem    to avoid problems with playback speed and video length glitches
 	Rem 3. aac -ar 48000 converts audio track to 48kHz to compatibility with Intro's and Outro's audio tracks
 	ffmpeg ^
-		-i %1 -i "%norm_wave_name%" -i "%logo_name%" ^
+		-i %1 -i "%norm_wave_name%" -loop 1 -i "%logo_name%" ^
 		-map 0:v -map 1:a ^
-		-filter_complex "[0]yadif=mode=send_field:deint=interlaced[deint], [deint]scale=%scale_filter%[scaled], [scaled][2]overlay=0:0" ^
+		-filter_complex "[0]yadif=mode=send_field:deint=interlaced[deint], [deint]scale=%scale_filter%[scaled], [scaled][2]overlay=0:0:shortest=1" ^
 		-c:v libx264 -crf 23 -video_track_timescale 90000 -vsync vfr -r 25 ^
 		-c:a aac -ar %audio_frame_rate% -ac %audio_channels% -vbr 3 ^
 		"%video_tmp_name%"
