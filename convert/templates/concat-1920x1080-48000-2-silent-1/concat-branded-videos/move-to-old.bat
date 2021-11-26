@@ -6,4 +6,5 @@ IF NOT EXIST %folder% (
 
 move 2*.mp4 %folder%
 del files.txt
+del joints.txt
 del concat.mp4
