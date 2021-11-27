@@ -1,4 +1,4 @@
-Rem Usage: vid-brand-v2-only-logo <filename> <resolution_x> <resolution_y> <crop_offset_x> <crop_offset_y> <audio_frame_rate> <audio_channels> [output_file]
+Rem Usage: vid-brand-v2-only-logo-crop <filename> <resolution_x> <resolution_y> <crop_offset_x> <crop_offset_y> <audio_frame_rate> <audio_channels> [output_file]
 Rem - resolution like 1920 1080, use 0 0 if You don't want to specify resolution
 
 Rem You can set environment variable no_delete=1 to don't delete temporary files
@@ -17,9 +17,6 @@ set crop_offset_y=%5
 set audio_frame_rate=%6
 set audio_channels=%7
 
-set silent_suffix=
-if "%6"=="silent" set silent_suffix=silent
-
 set wave_name=%~n1.wav
 set file_ext=%~x1
 set norm_wave_name=%~n1_norm.wav
@@ -33,12 +30,14 @@ if not "%~8"=="" (
 
 del %tmp_file%
 
-Rem getting source file resolution
+Rem getting source video resolution
 	ffprobe -v error -select_streams v:0 -show_entries stream=width -of csv=p=0 %1 > %tmp_file%
 	set /p source_video_width=<%tmp_file%
 
 	ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 %1 > %tmp_file%
 	set /p source_video_height=<%tmp_file%
+
+echo Source video resolution is: %source_video_width%x%source_video_height%
 
 Rem calculating scale and crop filters
 	set /A scale_factor_x=%desired_resolution_x%/%source_video_width%

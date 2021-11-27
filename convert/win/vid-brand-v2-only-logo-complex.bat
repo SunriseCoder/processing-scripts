@@ -1,5 +1,4 @@
-Rem Usage: vid-brand-v2-only-logo-rotate <filename> <resolution_x> <resolution_y> <crop_offset_x> <crop_offset_y> <audio_frame_rate> <audio_channels> [output_file]
-Rem - resolution like 1920 1080, use 0 0 if You don't want to specify resolution
+Rem Usage: vid-brand-v2-only-logo-complex <filename>
 
 Rem You can set environment variable no_delete=1 to don't delete temporary files
 
@@ -7,18 +6,20 @@ Rem variables
 set resource_path_escaped=%CONVERT_HOME:\=\\%\\res
 set tmp_file=tmp.txt
 
-set desired_resolution_x=%2
-set desired_resolution_y=%3
-set desired_resolution=%2x%3
+set desired_width=1920
+set desired_height=1080
+set desired_resolution=%desired_width%x%desired_height%
+set result_resolution=%desired_resolution%
 
-set crop_offset_x=%4
-set crop_offset_y=%5
+set audio_frame_rate=48000
+set audio_channels=2
 
-set audio_frame_rate=%6
-set desired_audio_channels=%7
-
-set silent_suffix=
-if "%6"=="silent" set silent_suffix=silent
+Rem set transpose, scale, crop and pad here
+set transpose_filter=1
+set scale_factor=1
+set scale_filter=iw*%scale_factor%:ih*%scale_factor%
+set crop_filter=w=1080:h=1080:x=0:y=300
+set pad_filter=w=1920:h=1080:x=420:y=0:color=black
 
 set wave_name=%~n1.wav
 set file_ext=%~x1
@@ -27,35 +28,7 @@ set norm_wave_name=%~n1_norm.wav
 set video_tmp_name=%~n1_tmp.mp4
 set video_with_logo_name=%~n1_logo.mp4
 
-if not "%~8"=="" (
-	set video_with_logo_name=%~n8%~x8
-)
-
-del %tmp_file%
-
-Rem getting source file resolution
-	ffprobe -v error -select_streams v:0 -show_entries stream=width -of csv=p=0 %1 > %tmp_file%
-	set /p source_video_width=<%tmp_file%
-
-	ffprobe -v error -select_streams v:0 -show_entries stream=height -of csv=p=0 %1 > %tmp_file%
-	set /p source_video_height=<%tmp_file%
-
-	set desired_resolution=%source_video_width%x%source_video_height%
-
-Rem getting audio sample rate
-	ffprobe -v error -select_streams a:0 -show_entries stream=sample_rate -of csv=p=0 %1 > %tmp_file%
-	set /p audio_frame_rate=<%tmp_file%
-
-Rem getting audio channel number
-	ffprobe -v error -select_streams a:0 -show_entries stream=channels -of csv=p=0 %1 > %tmp_file%
-	set /p audio_channels=<%tmp_file%
-	if %audio_channels% gtr 2 (
-		set audio_channels=2
-	)
-
-del %tmp_file%
-
-set logo_name=%CONVERT_HOME%\res\pictures\CA_Logo_for_%desired_resolution%.png
+set logo_name=%CONVERT_HOME%\res\pictures\CA_Logo_for_%result_resolution%.png
 
 Rem Checking that Logo exist, otherwise format is not supported
 
@@ -71,7 +44,7 @@ echo Processing of video %1 begin
 Rem Normalizing Audio
 echo ==== Normalizing audio
 	echo ==== ==== Unpacking %wave_name%
-		ffmpeg -y -i %1 -vn -ac %audio_channels% "%wave_name%"
+		ffmpeg -i %1 -vn -ac %audio_channels% "%wave_name%"
 		if %errorlevel% neq 0 exit /b %errorlevel%
 	echo ==== ==== Unpacking of %wave_name% is done
 
@@ -86,10 +59,10 @@ echo ==== Embedding Logo
 	Rem 2. -video_track_timescale 90000 is needed to time_base of the video would match to the Intro and Outro
 	Rem    to avoid problems with playback speed and video length glitches
 	Rem 3. aac -ar 48000 converts audio track to 48kHz to compatibility with Intro's and Outro's audio tracks
-	ffmpeg -y ^
-		-i %1 -i "%norm_wave_name%" -i "%logo_name%" ^
+	ffmpeg ^
+		-i %1 -i "%norm_wave_name%" -loop 1 -i "%logo_name%" ^
 		-map 0:v -map 1:a ^
-		-filter_complex "[0]yadif=mode=send_field:deint=interlaced[deint], [deint]transpose=3[transposed], [transposed][2]overlay=0:0" ^
+		-filter_complex "[0]yadif=mode=send_field:deint=interlaced[deint], [deint]transpose=%transpose_filter%[transposed], [transposed]scale=%scale_filter%[scaled], [scaled]crop=%crop_filter%[cropped], [cropped]pad=%pad_filter%[padded], [padded][2]overlay=0:0:shortest=1" ^
 		-c:v libx264 -crf 23 -video_track_timescale 90000 -vsync vfr -r 25 ^
 		-c:a aac -ar %audio_frame_rate% -ac %audio_channels% -vbr 3 ^
 		"%video_tmp_name%"
