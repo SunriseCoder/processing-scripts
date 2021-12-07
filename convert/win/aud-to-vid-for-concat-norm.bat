@@ -50,8 +50,9 @@ ffmpeg ^
 	-i "%norm_audio_filename%" ^
 	-c:a %audio_format% -b:a 64k %frame_rate% %channel_number% ^
 	-c:v libx264 -video_track_timescale 90000 -vsync vfr -r 25 ^
-		-tune stillimage -pix_fmt yuv420p ^
+	-tune stillimage -pix_fmt yuv420p ^
 	-shortest ^
+	-fflags +shortest -max_interleave_delta 500M ^
 	"%target_video_filename%"
 
 echo ==== deleting temporary files
