@@ -9,7 +9,7 @@ set target_video_filename=%~n1.mp4
 
 set image_stub_filename=%CONVERT_HOME%\res\pictures\AV-Stub-SPP-640x360.jpg
 if NOT "%~2"=="" (
-	set image_stub_filename=%CONVERT_HOME%\res\pictures\%2
+	set image_stub_filename=%2
 )
 
 set audio_format=aac
@@ -27,12 +27,13 @@ if NOT "%~5"=="" (
 
 ffmpeg ^
 	-loop 1 ^
-	-i %image_stub_filename% ^
-	-i %source_audio_filename% ^
+	-i "%image_stub_filename%" ^
+	-i "%source_audio_filename%" ^
 	-c:a %audio_format% -b:a 64k %frame_rate% %channel_number% ^
 	-c:v libx264 -video_track_timescale 90000 -vsync vfr -r 25 ^
 		-tune stillimage -pix_fmt yuv420p ^
 	-shortest ^
-	%1.mp4
+	-fflags +shortest -max_interleave_delta 500M ^
+	"%target_video_filename%"
 
 echo %1 is done
