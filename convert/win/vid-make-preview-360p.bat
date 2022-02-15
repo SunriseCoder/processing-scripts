@@ -1,6 +1,6 @@
 Rem Compressing video to x264 CRF=23
 
-set compressed_name=%~n1_preview%~x1
+set compressed_name=%~n1_preview.mp4
 set scale_filter=-1:360
 
 ffmpeg ^
