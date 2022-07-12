@@ -1,0 +1,27 @@
+{
+	"prefixes": [
+		"CA_Intro_",
+		"CA_Outro_"
+	],
+	"resolutions": [
+		"1920x1080",
+		"1280x720",
+		"640x360"
+	],
+	"audioFrequences": [
+		"32000",
+		"44100",
+		"48000"
+	],
+	"audioChannels": [
+		"1",
+		"2"
+	],
+	"videoFPS": [
+		"30"
+	],
+	"silence": {
+		"": "-af \"volume=1.0\"",
+		"silent": "-af \"volume=0\""
+	}
+}
