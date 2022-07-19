@@ -22,10 +22,10 @@ if "%desired_resolution%" neq "0x0" (
 )
 
 ffmpeg ^
-	-loop 1 -i "%source_file%" -f lavfi -i anullsrc=r=%audio_frame_rate%:cl=%audio_channels% ^
+	-loop 1 -i %source_file% -f lavfi -i anullsrc=r=%audio_frame_rate%:cl=%audio_channels% ^
 	-filter_complex "[0]scale=%scale_filter%" ^
 	-c:v libx264 -t %video_duration% -crf 23  -video_track_timescale 90000 -vsync vfr -r 25 -pix_fmt yuv420p ^
 	-c:a aac -ar %audio_frame_rate% -ac %audio_channels% -vbr 3 ^
-	"%output_file%"
+	%output_file%
 
 rem	-f lavfi -i anullsrc=r=%audio_frame_rate%:cl=mono ^
