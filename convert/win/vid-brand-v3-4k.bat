@@ -19,7 +19,7 @@ if "%2"=="" (
 	echo Usage: vid-brand-v3-4k ^<filename^> ^<fps^> [silent]
 	echo ^<fps^> is mandatory parameter and was not set
 	pause
-	exit(1);
+	goto exit
 )
 set fps=%2
 
