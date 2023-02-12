@@ -16,8 +16,8 @@ set video_tmp_name=%~n1_tmp.mp4
 set video_ready_name=%~n1_ready.mp4
 
 if "%2"=="" (
-	echo Usage: vid-brand-v3-4k <filename> <fps> [silent]
-	echo <fps> is mandatory parameter and was not set
+	echo Usage: vid-brand-v3-4k ^<filename^> ^<fps^> [silent]
+	echo ^<fps^> is mandatory parameter and was not set
 	pause
 	exit(1);
 )
