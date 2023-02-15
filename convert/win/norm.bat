@@ -17,8 +17,7 @@ Rem 2. Preparing Operations
 	set operations=%operations:~1%
 
 Rem 3. Normalization
-rem	java -cp %CONVERT_HOME%\res\portal-integrations-0.0.2-SNAPSHOT.jar app.integrations.AudioManipulations %1 "%~n1_norm.wav" %operations%
-	java -cp %CONVERT_HOME%\res\jars\audio-tools-0.0.1-SNAPSHOT-jar-with-dependencies.jar process.AudioManipulationsApp %1 "%~n1_norm.wav" %operations%
+	java -Xmx16G -cp %CONVERT_HOME%\res\jars\audio-tools-0.0.1-SNAPSHOT-jar-with-dependencies.jar process.AudioManipulationsApp %1 "%~n1_norm.wav" %operations%
 	echo Normalization of %1% is done
 
 Rem 4. Dump Wave Files
