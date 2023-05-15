@@ -12,9 +12,9 @@ set wave_name=%~n1.wav
 set file_ext=%~x1
 set norm_wave_name=%~n1_norm.wav
 
-set compressed_video_name=%~n1_tmp1.mp4
+set video_with_logo_name=%~n1_logo.mp4
 
-set video_tmp_name=%~n1_tmp2.mp4
+set video_tmp_name=%~n1_tmp.mp4
 set video_ready_name=%~n1_ready.mp4
 
 set scale_filter=-1:-1
@@ -50,8 +50,9 @@ del %tmp_file%
 Rem CA_Intro_1080x1920-60fps-44100Hz-1Ch-silent.mp4
 set intro_name=%resource_path_escaped%\\videos\\v2\\generated\\CA_Intro_%resolution%-30fps-%frame_rate%Hz-%channel_number%Ch-%silent_suffix%.mp4
 set outro_name=%resource_path_escaped%\\videos\\v2\\generated\\CA_Outro_%resolution%-30fps-%frame_rate%Hz-%channel_number%Ch-%silent_suffix%.mp4
+set logo_name=%CONVERT_HOME%\res\pictures\transparent-1x1.png
 
-Rem Checking that Intro and Outro are exist, otherwise format is not supported
+Rem Checking that Intro, Outro and Logo are exists, otherwise format is not supported
 	if not exist %intro_name% (
 		echo Format is not supported, because there is no file: %intro_name%
 		exit /b -1
@@ -59,6 +60,11 @@ Rem Checking that Intro and Outro are exist, otherwise format is not supported
 
 	if not exist %outro_name% (
 		echo Format is not supported, because there is no file: %outro_name%
+		exit /b -1
+	)
+
+	if not exist %logo_name% (
+		echo Format is not supported, because there is no file: %logo_name%
 		exit /b -1
 	)
 
@@ -85,19 +91,19 @@ echo ==== Embedding Logo
 	Rem    to avoid problems with playback speed and video length glitches
 	Rem 3. aac -ar 48000 converts audio track to 48kHz to compatibility with Intro's and Outro's audio tracks
 	ffmpeg ^
-		-i %1 -i "%norm_wave_name%" ^
+		-i %1 -i "%norm_wave_name%" -i "%logo_name%" ^
 		-map 0:v -map 1:a ^
-		-filter_complex "[0]yadif=mode=send_field:deint=interlaced[deint], [deint]scale=%scale_filter%" ^
+		-filter_complex "[0]yadif=mode=send_field:deint=interlaced[deint], [deint]scale=%scale_filter%[scaled], [scaled][2]overlay=0:0" ^
 		-c:v libx264 -crf 23 -video_track_timescale 90000 -vsync vfr -r 25 ^
 		-c:a aac -ar %frame_rate% -ac %channel_number% -vbr 3 ^
-		"%compressed_video_name%"
+		"%video_with_logo_name%"
 	if %errorlevel% neq 0 exit /b %errorlevel%
 
 Rem Intro and Outro
 echo ==== Wrapping Intro and Outro
 	Rem Preparing files_.txt
 	echo file '%intro_name%' > files_.txt
-	set file_name=%compressed_video_name:"=%
+	set file_name=%video_with_logo_name:"=%
 	echo file '%file_name%' >> files_.txt
 	echo file '%outro_name%' >> files_.txt
 
@@ -119,7 +125,7 @@ echo ==== deleting temporary files
 		del files_.txt
 		rem del "%wave_name%"
 		rem del "%norm_wave_name%"
-		Rem del "%compressed_video_name%"
+		Rem del "%video_with_logo_name%"
 	)
 
 echo ==== deleting of temporary files is done
