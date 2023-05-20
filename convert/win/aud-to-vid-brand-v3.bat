@@ -68,7 +68,7 @@ echo Processing of video %1 begin
 
 Rem Normalizing Audio
 echo ==== Normalizing audio
-	if not "%1" == "%wave_name%" (
+	if not %1 == "%wave_name%" (
 		echo ==== ==== Unpacking %wave_name%
 			ffmpeg -i %1 -vn -ac %channel_number% "%wave_name%"
 			if %errorlevel% neq 0 exit /b %errorlevel%

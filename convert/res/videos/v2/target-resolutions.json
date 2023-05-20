@@ -1,31 +1,60 @@
-{
-	"prefixes": [
-		"CA_Intro_",
-		"CA_Outro_"
-	],
-	"resolutions": [
-		"3840x2160",
-		"1920x1080",
-		"1280x720",
-		"640x360"
-	],
-	"audioFrequences": [
-		"32000",
-		"44100",
-		"48000"
-	],
-	"audioChannels": [
-		"1",
-		"2"
-	],
-	"videoFPS": [
-		"25",
-		"30",
-		"50",
-		"60"
-	],
-	"silence": {
-		"": "-af \"volume=1.0\"",
-		"silent": "-af \"volume=0\""
+[
+	{
+		"name": "frequent",
+		"prefixes": [
+			"CA_Intro_",
+			"CA_Outro_"
+		],
+		"resolutions": [
+			"1920x1080",
+			"640x360"
+		],
+		"audioFrequences": [
+			"44100",
+			"48000"
+		],
+		"audioChannels": [
+			"1",
+			"2"
+		],
+		"videoFPS": [
+			"25",
+			"30"
+		],
+		"silence": {
+			"": "-af \"volume=1.0\""
+		}
+	},
+	{
+		"name": "others",
+		"prefixes": [
+			"CA_Intro_",
+			"CA_Outro_"
+		],
+		"resolutions": [
+			"3840x2160",
+			"1920x1080",
+			"1280x720",
+			"640x360"
+		],
+		"audioFrequences": [
+			"32000",
+			"44100",
+			"48000"
+		],
+		"audioChannels": [
+			"1",
+			"2"
+		],
+		"videoFPS": [
+			"25",
+			"30",
+			"50",
+			"60"
+		],
+		"silence": {
+			"": "-af \"volume=1.0\"",
+			"silent": "-af \"volume=0\""
+		}
 	}
-}
+]
