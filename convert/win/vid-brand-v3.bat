@@ -25,7 +25,7 @@ set video_ready_name=%~n1_ready.mp4
 
 set scale_filter=-1:-1
 
-set video_fps=30
+set video_fps=-1
 
 del %tmp_file%
 
@@ -45,8 +45,16 @@ if "%resolution%" == "3840x2160" (
 Rem getting video frames per second rate (fps)
 	ffprobe -v error -select_streams v:0 -show_entries stream=r_frame_rate -of csv=p=0 %1 > %tmp_file%
 	set /p ffprobe_video_fps=<%tmp_file%
+	if "%ffprobe_video_fps%" == "30/1" (
+		set video_fps=30
+	)
 	if "%ffprobe_video_fps%" == "60/1" (
 		set video_fps=60
+	)
+
+	if %video_fps% == -1 (
+		echo Format is not supported, unsupported fps: %video_fps%
+		exit /b -1
 	)
 
 Rem getting audio sample rate
