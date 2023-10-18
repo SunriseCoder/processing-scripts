@@ -45,6 +45,9 @@ if "%resolution%" == "3840x2160" (
 Rem getting video frames per second rate (fps)
 	ffprobe -v error -select_streams v:0 -show_entries stream=r_frame_rate -of csv=p=0 %1 > %tmp_file%
 	set /p ffprobe_video_fps=<%tmp_file%
+	if "%ffprobe_video_fps%" == "25/1" (
+		set video_fps=25
+	)
 	if "%ffprobe_video_fps%" == "30/1" (
 		set video_fps=30
 	)
