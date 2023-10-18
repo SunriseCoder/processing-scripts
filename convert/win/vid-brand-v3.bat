@@ -123,7 +123,7 @@ if NOT "%skip_embedding_logo%"=="1" (
 
 	ffmpeg ^
 		-i %1 -i "%norm_wave_name%" -i "%logo_name%" ^
-		-filter_complex "[0]yadif=mode=send_field:deint=interlaced[deint], [deint]scale=%scale_filter%[scaled], [scaled][2]overlay=0:0[v]" ^
+		-filter_complex "[0]format=pix_fmts=yuv420p[pix_format_fixed], [pix_format_fixed]yadif=mode=send_field:deint=interlaced[deint], [deint]scale=%scale_filter%[scaled], [scaled][2]overlay=0:0[v]" ^
 		-map "[v]" -map 1:a:0 ^
 		-c:v libx264 -crf 23 -video_track_timescale 90000 -fps_mode passthrough ^
 		-c:a aac -ar %frame_rate% -ac %channel_number% -vbr 3 ^
