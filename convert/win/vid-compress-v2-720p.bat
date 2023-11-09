@@ -10,6 +10,6 @@ ffmpeg ^
 	-c:a aac -vbr 3 ^
 	"%tmp_name%"
 
-move %tmp_name% %out_name%
+move "%tmp_name%" "%out_name%"
 
 echo Compressing of %1 is done
